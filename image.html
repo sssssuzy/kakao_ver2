@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+        <title>이미지검색</title>
+        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+        <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="https://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+        <style>
+             @font-face{font-family: grulim; src:url("a뉴굴림1.ttf")}
+            *{font-family: grulim;}
+            #list{overflow: hidden;}
+            #list img{margin: 20px; float: left; text-align: center; width:200px; height:200px; }
+            #imageContents{text-align: center; }
+            #imageContents img{border-radius: 10px; text-align: center;  border: 2px solid rgb(185, 184, 184);}
+            
+        </style>
+    </head>
+    <body>
+        <div data-role="page" id="main">
+            <div data-role="header"  data-theme="c">
+                <h1>이미지검색</h1>                
+            </div>
+            <div data-role="content" data-theme="c">                
+                <input type="text" id="txtQuery" value="해리포터"/>
+                    <div data-role="listview"  id="list"></div>
+                    <script id="temp" type="text/x-handlebars-template">
+                    {{#each documents}}                   
+                       <a href="#imageSub" data-rel="dialog"><img src="{{image_url}}"></a>                     
+                    {{/each}}                    
+                    </script>
+            </div>  
+            <input type="button" id="btnMore" value="More"/>          
+            <div data-role="footer" data-theme="c"><h2>인천일보 아카데미 김수지</h2></div>
+        </div>
+        <div data-role="page" id="imageSub">
+            <div data-role="header"  data-theme="c" >
+                <h1>이미지 크게보기</h1>                
+            </div>
+            <div data-role="content" data-theme="c" id="imageContents">                
+                <img src="" id="image" width="" height="">
+            </div>            
+            <div data-role="footer" data-theme="c"><h2>인천일보 아카데미 김수지</h2></div>
+        </div>
+    </body>
+    <script>
+        var size = 10;
+        $("#txtQuery").on("keydown", function(){
+            size=10;
+            getList();
+        });
+        var url =  "https://dapi.kakao.com/v2/search/image";
+    </script>
+    <script src="script.js"></script>
+</html>

@@ -9,13 +9,16 @@
         <style>
              @font-face{font-family: grulim; src:url("a뉴굴림1.ttf")}
             *{font-family: grulim;}
-            #bookContents{text-align: center;}
+            #list{margin: 20px;}
+            #bookContents{text-align: center; margin:20px;}
             #bookContents img{border-radius: 10px; border: 2px solid rgb(185, 184, 184);}
         </style>
     </head>
     <body>
         <div data-role="page" id="main">
-            <div data-role="header"  data-theme="c"><h1>도서검색</h1></div>
+            <div data-role="header"  data-theme="c" id="bookHeader">
+                <h1>도서검색</h1>                
+            </div>
             <div data-role="content" data-theme="c">                
                 <input type="text" id="txtQuery" value="해리포터"/>
                     <ul data-role="listview"  id="list"></ul>
@@ -23,9 +26,10 @@
                     {{#each documents}}
                     <li>
                        <a href="#bookSub" data-rel="dialog" title="{{title}}" contents="{{contents}}" authors="{{authors}}" price="{{price}}"><img src="{{thumbnail}}">{{{title}}}</a> 
-                    </li>
-                    {{/each}}
+                     </li>
+                    {{/each}}                    
                     </script>
+                    <input type="button" id="btnMore" value="More"/>
             </div>
             <div data-role="footer" data-theme="c"><h2>인천일보 아카데미 김수지</h2></div>
         </div>
@@ -38,37 +42,18 @@
                     <img src="" id="image" width=200 height=250>
                     <h3 id="authors"></h3>
                     <h4 id="contents"></h4>
-                 </div>
+                </div>
             </div>
             <div data-role="footer" data-theme="a"><h2>인천일보 아카데미 김수지</h2></div>
         </div>
     </body>
     <script>
-        getList();
-        $("#list").on("click","a", function(){
-            var title=$(this).attr("title");
-            var authors=$(this).attr("authors");
-            var price=$(this).attr("price");
-            var contents=$(this).attr("contents");
-            var image=$(this).find("img").attr("src");
-            $("#title").html(title);
-            $("#image").attr("src", image);
-            $("#authors").html(authors+"("+price+"원)");
-            $("#contents").html(contents);
+        var size = 5;
+        $("#txtQuery").on("keydown", function(){
+            size=5;
+            getList();
         });
-        function getList(){
-            var query=$("#txtQuery").val();
-            $.ajax({
-                type:"get",
-                url: "https://dapi.kakao.com/v3/search/book?target=title",
-                data: {"query":query},
-                dataType: "json",
-                headers: {"Authorization": "KakaoAK d3ddfc03751730ccdffaedd440d93708"},
-                success:function(data){
-                    var temp=Handlebars.compile($("#temp").html());
-                    $("#list").html(temp(data)).listview("refresh");
-                }
-            });
-    }
+        var url = "https://dapi.kakao.com/v3/search/book?target=title";
     </script>
+    <script src="script.js"></script>
 </html>
