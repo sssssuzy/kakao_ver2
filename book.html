@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+        <title>도서검색</title>
+        <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+        <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="https://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+        <style>
+             @font-face{font-family: grulim; src:url("a뉴굴림1.ttf")}
+            *{font-family: grulim;}
+            #bookContents{text-align: center;}
+            #bookContents img{border-radius: 10px; border: 2px solid rgb(185, 184, 184);}
+        </style>
+    </head>
+    <body>
+        <div data-role="page" id="main">
+            <div data-role="header"  data-theme="c"><h1>도서검색</h1></div>
+            <div data-role="content" data-theme="c">                
+                <input type="text" id="txtQuery" value="해리포터"/>
+                    <ul data-role="listview"  id="list"></ul>
+                    <script id="temp" type="text/x-handlebars-template">
+                    {{#each documents}}
+                    <li>
+                       <a href="#bookSub" data-rel="dialog" title="{{title}}" contents="{{contents}}" authors="{{authors}}" price="{{price}}"><img src="{{thumbnail}}">{{{title}}}</a> 
+                    </li>
+                    {{/each}}
+                    </script>
+            </div>
+            <div data-role="footer" data-theme="c"><h2>인천일보 아카데미 김수지</h2></div>
+        </div>
+        <div data-role="page" id="bookSub">
+            <div data-role="header"  data-theme="a">
+                <h1 id="title"></h1>
+            </div>
+            <div data-role="content" data-theme="c">      
+                <div id="bookContents">      
+                    <img src="" id="image" width=200 height=250>
+                    <h3 id="authors"></h3>
+                    <h4 id="contents"></h4>
+                 </div>
+            </div>
+            <div data-role="footer" data-theme="a"><h2>인천일보 아카데미 김수지</h2></div>
+        </div>
+    </body>
+    <script>
+        getList();
+        $("#list").on("click","a", function(){
+            var title=$(this).attr("title");
+            var authors=$(this).attr("authors");
+            var price=$(this).attr("price");
+            var contents=$(this).attr("contents");
+            var image=$(this).find("img").attr("src");
+            $("#title").html(title);
+            $("#image").attr("src", image);
+            $("#authors").html(authors+"("+price+"원)");
+            $("#contents").html(contents);
+        });
+        function getList(){
+            var query=$("#txtQuery").val();
+            $.ajax({
+                type:"get",
+                url: "https://dapi.kakao.com/v3/search/book?target=title",
+                data: {"query":query},
+                dataType: "json",
+                headers: {"Authorization": "KakaoAK d3ddfc03751730ccdffaedd440d93708"},
+                success:function(data){
+                    var temp=Handlebars.compile($("#temp").html());
+                    $("#list").html(temp(data)).listview("refresh");
+                }
+            });
+    }
+    </script>
+</html>
